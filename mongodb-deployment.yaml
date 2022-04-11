@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongodb
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_DATABASE
+              value: mypydb
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: mypwdformongodb
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: mongodbshivam
+          image: mongo:latest
+          name: mongo-db
+          ports:
+            - containerPort: 27017
+          resources: {}
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/mongo-init.js
+              name: mongodb-hostpath0
+              readOnly: true
+            - mountPath: /data/db
+              name: mongodb-hostpath1
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /mnt/J/development/p1/init-mongo.js
+          name: mongodb-hostpath0
+        - hostPath:
+            path: /mnt/J/development/p1/mongo_external_volume
+          name: mongodb-hostpath1
+status: {}

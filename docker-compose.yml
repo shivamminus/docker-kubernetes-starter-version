@@ -1,0 +1,22 @@
+version: "3"
+services:
+  app:
+    image: 96385274/py-mongo-container
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    links:
+      - mongodb:localhost
+  mongodb:
+    image: mongo:latest
+    container_name: mongo_db
+    environment:
+      MONGO_INITDB_DATABASE: mypydb
+      MONGO_INITDB_ROOT_USERNAME: mongodbshivam
+      MONGO_INITDB_ROOT_PASSWORD: mypwdformongodb
+    volumes: 
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo_external_volume:/data/db
+    ports:
+      - 27017:27017
